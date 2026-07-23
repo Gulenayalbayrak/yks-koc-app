@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YKS 3'ten 30'a 70 Günlük Kamp</title>
+    <style>
+        :root {
+            --bg-color: #faf8f5;
+            --card-bg: #ffffff;
+            --primary: #2d3748;
+            --accent: #3182ce;
+            --success: #38a169;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #1a202c;
+            margin-bottom: 5px;
+        }
+        .badge {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .day-selector {
+            margin: 15px 0;
+            text-align: center;
+        }
+        select {
+            padding: 8px 12px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            cursor: pointer;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 20px;
+        }
+        .lesson-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2b6cb0;
+            background: #ebf8ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 18px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 8px;
+            margin-top: 0;
+            color: #1a202c;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        .question-box {
+            background: #fffaf0;
+            border-left: 4px solid #dd6b20;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 8px;
+        }
+        .options li {
+            background: #ffffff;
+            border: 1px solid #cbd5e0;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover {
+            background: #e2e8f0;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        a.btn {
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        a.btn:hover {
+            background: #2b6cb0;
+        }
+        .feedback {
+            margin-top: 8px;
+            font-weight: bold;
+            display: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 YKS 3'ten 30'a 70 Günlük Kamp</h1>
+            <span class="badge">Gün {{ veri.gun }} - {{ veri.tarih }}</span>
+            
+            <div class="day-selector">
+                <label for="gunSelect"><strong>Gün Seç:</strong></label>
+                <select id="gunSelect" onchange="location.href='/?gun=' + this.value">
+                    {% for g in range(1, toplam_gun + 1) %}
+                    <option value="{{ g }}" {% if g == suanki_gun %}selected{% endif %}>Kampın {{ g }}. Günü</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </header>
+
+        <!-- DERS 1: MATEMATİK -->
+        <div class="card">
+            <span class="lesson-title">📚 Ders 1: {{ veri.ders1 }}</span>
+            <h2>{{ veri.konu1 }}</h2>
+            <p><strong>Strateji:</strong> {{ veri.aciklama1 }}</p>
+            
+            <h3>Bugünkü Görevler:</h3>
+            <ul>
+                {% for gorev in veri.gorevler1 %}
+                <li>{{ gorev }}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="question-box">
+                <p><strong>Çıkmış Soru Pratiği:</strong> {{ veri.soru1.metin }}</p>
+                <ul class="options">
+                    {% for sec in veri.soru1.secenekler %}
+                    <li onclick="cevirKontrol('feedback1', '{{ sec[0] }}', '{{ veri.soru1.cevap }}', '{{ veri.soru1.cozum }}')">{{ sec }}</li>
+                    {% endfor %}
+                </ul>
+                <div id="feedback1" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- DERS 2: İKİNCİ DERS -->
+        <div class="card">
+            <span class="lesson-title" style="background: #f0fff4; color: #22543d;">🔬 Ders 2: {{ veri.ders2 }}</span>
+            <h2>{{ veri.konu2 }}</h2>
+            <p><strong>Strateji:</strong> {{ veri.aciklama2 }}</p>
+            
+            <h3>Bugünkü Görevler:</h3>
+            <ul>
+                {% for gorev in veri.gorevler2 %}
+                <li>{{ gorev }}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="question-box" style="border-left-color: #38a169;">
+                <p><strong>Çıkmış Soru Pratiği:</strong> {{ veri.soru2.metin }}</p>
+                <ul class="options">
+                    {% for sec in veri.soru2.secenekler %}
+                    <li onclick="cevirKontrol('feedback2', '{{ sec[0] }}', '{{ veri.soru2.cevap }}', '{{ veri.soru2.cozum }}')">{{ sec }}</li>
+                    {% endfor %}
+                </ul>
+                <div id="feedback2" class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            {% if suanki_gun > 1 %}
+            <a href="/?gun={{ suanki_gun - 1 }}" class="btn">⬅️ Önceki Gün</a>
+            {% else %}
+            <div></div>
+            {% endif %}
+
+            {% if suanki_gun < toplam_gun %}
+            <a href="/?gun={{ suanki_gun + 1 }}" class="btn">Sonraki Gün ➡️</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function cevirKontrol(feedbackId, secilen, dogru, cozum) {
+            const feedback = document.getElementById(feedbackId);
+            feedback.style.display = 'block';
+            if(secilen === dogru) {
+                feedback.innerHTML = "✅ Tebrikler! Doğru cevap.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerHTML = "❌ Yanlış. Doğru cevap: " + dogru + ". Çözüm: " + cozum;
+                feedback.style.color = "#e53e3e";
+            }
+        }
+    </script>
+</body>
+</html>
